@@ -268,10 +268,10 @@
     <div id="tiktok-breakout-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #121212; color: #ffffff; padding: 15px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); z-index: 999999; border-bottom: 2px solid #fe2c55;">
         <div style="max-width: 500px; margin: 0 auto; padding: 0 10px;">
             <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.4; font-weight: 500;">
-                ⚠️ O navegador do TikTok bloqueia a abertura do WhatsApp. Toque no botão abaixo para abrir direto no WhatsApp.
+                ⚠️ O TikTok bloqueia a abertura do WhatsApp. Toque no botão abaixo para copiar o link e abrir o WhatsApp.
             </p>
-            <button onclick="breakoutOfTikTok()" style="background-color: #fe2c55; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s;">
-                Abrir no Navegador Externo
+            <button onclick="breakoutOfTikTok()" style="background-color: #25D366; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s;">
+                ABRIR WHATSAPP AGORA
             </button>
         </div>
     </div>
@@ -366,42 +366,29 @@
             }
         });
 
-        function tentarAbrir(url) {
-            var a = document.createElement('a');
-            a.href = url;
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
         function breakoutOfTikTok() {
             var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var waIntent = 'intent://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj#Intent;scheme=https;package=com.whatsapp;end';
 
-            if (navigator.share) {
-                navigator.share({ url: linkWhatsApp });
-                return;
-            }
+            navigator.clipboard.writeText(linkWhatsApp);
 
-            if (/Android/i.test(userAgent)) {
-                var intentUrl = 'intent://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj#Intent;scheme=https;package=com.whatsapp;S.browser_fallback_url=https%3A%2F%2Fchat.whatsapp.com%2FI56rQ4a5uJvJQIxhtdLLBj;end';
-                tentarAbrir(intentUrl);
+            // whatsapp:// nao pode ser renderizado por WebView - forca SO a abrir o app
+            window.location.href = 'whatsapp://send?text=Quero%20entrar%20no%20grupo!';
 
-                setTimeout(function() { tentarAbrir(linkWhatsApp); }, 200);
-                setTimeout(function() { window.location.href = intentUrl; }, 400);
-                setTimeout(function() { window.location.href = linkWhatsApp; }, 600);
-                setTimeout(function() {
-                    navigator.clipboard.writeText(linkWhatsApp);
-                    alert('Link copiado! Cole no navegador do seu celular para entrar no grupo.');
-                }, 1000);
-            } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                tentarAbrir(linkWhatsApp);
-                setTimeout(function() { window.location.href = linkWhatsApp; }, 200);
-                setTimeout(function() {
-                        alert("Para sair do app:\n\n1. Toque nos 3 pontinhos (•••) no canto superior direito.\n2. Selecione 'Abrir no Navegador' (Safari).\n\nLink copiado: " + linkWhatsApp);
-                }, 800);
-            }
+            setTimeout(function() { window.location.href = waIntent; }, 100);
+            setTimeout(function() { window.location.href = linkWhatsApp; }, 300);
+            setTimeout(function() { try { navigator.share({ url: linkWhatsApp }); } catch(e) {} }, 500);
+            setTimeout(function() { window.open(linkWhatsApp, '_system'); }, 700);
+            setTimeout(function() {
+                var meta = document.createElement('meta');
+                meta.httpEquiv = 'refresh';
+                meta.content = '0;url=' + linkWhatsApp;
+                document.getElementsByTagName('head')[0].appendChild(meta);
+            }, 900);
+
+            setTimeout(function() {
+                alert('Link copiado! Abra o WhatsApp, toque em "Novo grupo" > "Link do grupo" e cole o link que foi copiado.');
+            }, 1500);
         }
     </script>
 </body>
