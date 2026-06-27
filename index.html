@@ -270,12 +270,13 @@
 <body>
     <div id="interstitial" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); z-index: 99999999; align-items: center; justify-content: center; padding: 24px;">
         <div style="text-align: center; max-width: 320px;">
-            <div style="width: 80px; height: 80px; margin: 0 auto 24px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #25D366; border-radius: 50%; animation: spin 0.9s linear infinite;"></div>
-            <p style="color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 24px;">O TikTok bloqueia a abertura do WhatsApp. Toque no botão para continuar no navegador do seu celular.</p>
-            <a id="escape-link" href="#" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 40px; background: #25D366; color: #fff; border-radius: 60px; text-decoration: none; font-weight: 700; font-size: 17px; min-width: 220px; box-shadow: 0 4px 20px rgba(37,211,102,0.3); -webkit-tap-highlight-color: transparent;">
-                CONTINUAR
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </a>
+            <div style="font-size: 48px; margin-bottom: 16px;">🔗</div>
+            <p style="color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 8px; font-weight: 600;">Toque no botão abaixo e selecione <strong style="color: #25D366;">WhatsApp</strong> na lista</p>
+            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px;">O TikTok não permite abrir links externos automaticamente</p>
+            <button onclick="escaparTikTok()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 40px; background: #25D366; color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 17px; min-width: 220px; box-shadow: 0 4px 20px rgba(37,211,102,0.3); cursor: pointer;">
+                COMPARTILHAR NO WHATSAPP
+            </button>
+            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">Ou toque nos 3 pontinhos <span style="font-size: 16px;">•••</span> e escolha "Abrir no navegador"</p>
         </div>
     </div>
     <div class="container">
@@ -325,34 +326,34 @@
         document.getElementById('vagasNumero').textContent = Math.floor(Math.random() * 10) + 1;
 
         const linkWhatsApp = 'https://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj';
-        const currentUrl = window.location.href;
         const ua = (navigator.userAgent || '').toLowerCase();
         const isInAppBrowser = ua.indexOf('tiktok') > -1 || ua.indexOf('musical') > -1 || /; ?wv[);]/i.test(ua);
-        const alreadyEscaped = window.location.search.indexOf('escaped=1') > -1;
 
-        function androidIntentUrl(targetUrl) {
-            var u = new URL(targetUrl);
-            return 'intent://' + u.host + u.pathname + u.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(targetUrl) + ';end';
+        function escaparTikTok() {
+            navigator.clipboard.writeText(linkWhatsApp);
+
+            if (navigator.share) {
+                navigator.share({ url: linkWhatsApp });
+            } else if (/android/i.test(ua)) {
+                var u = new URL(linkWhatsApp);
+                var intentUrl = 'intent://' + u.host + u.pathname + u.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(linkWhatsApp) + ';end';
+                window.location.href = intentUrl;
+            } else {
+                window.location.href = linkWhatsApp;
+            }
         }
 
-        if (isInAppBrowser && !alreadyEscaped) {
+        if (isInAppBrowser) {
             document.getElementById('interstitial').style.display = 'flex';
-
-            var escapeUrl = currentUrl + (currentUrl.indexOf('?') > -1 ? '&' : '?') + 'escaped=1';
-
-            if (/android/i.test(ua)) {
-                document.getElementById('escape-link').href = androidIntentUrl(escapeUrl);
-            } else {
-                document.getElementById('escape-link').href = escapeUrl;
-                document.getElementById('escape-link').onclick = function(e) {
-                    e.preventDefault();
-                    window.location.href = escapeUrl;
-                };
-            }
         }
 
         function abrirGrupo() {
             fbq('track', 'Lead');
+
+            if (isInAppBrowser) {
+                escaparTikTok();
+                return;
+            }
 
             navigator.clipboard.writeText(linkWhatsApp);
 
