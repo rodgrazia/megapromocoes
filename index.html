@@ -268,15 +268,51 @@
     </style>
 </head>
 <body>
-    <div id="interstitial" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); z-index: 99999999; align-items: center; justify-content: center; padding: 24px;">
-        <div style="text-align: center; max-width: 320px;">
-            <div style="font-size: 48px; margin-bottom: 16px;">🔗</div>
-            <p style="color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 8px; font-weight: 600;">Toque em <strong style="color: #25D366;">compartilhar</strong> e selecione <strong style="color: #25D366;">WhatsApp</strong></p>
-            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px;">O WhatsApp vai abrir com o link do grupo</p>
-            <button onclick="escaparTikTok()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 40px; background: #25D366; color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 17px; min-width: 220px; box-shadow: 0 4px 20px rgba(37,211,102,0.3); cursor: pointer;">
-                COMPARTILHAR
+    <div id="interstitial" style="display: none; position: fixed; inset: 0; background: #0f0c29; z-index: 99999999; overflow-y: auto; padding: 32px 20px;">
+        <div style="max-width: 360px; margin: 0 auto; text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 8px;">⚠️</div>
+            <h2 style="color: #fff; font-size: 20px; font-weight: 800; margin: 0 0 4px;">TikTok bloqueou a saída</h2>
+            <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0 0 24px;">Siga os passos abaixo para entrar no grupo</p>
+
+            <div style="background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 12px; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="width: 28px; height: 28px; min-width: 28px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700;">1</span>
+                    <span style="color: #fff; font-size: 14px;">Toque em <strong style="color: #25D366;">COPIAR LINK</strong> abaixo</span>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 12px; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="width: 28px; height: 28px; min-width: 28px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700;">2</span>
+                    <span style="color: #fff; font-size: 14px;">Abra o <strong style="color: #25D366;">WhatsApp</strong> no seu celular</span>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 24px; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="width: 28px; height: 28px; min-width: 28px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700;">3</span>
+                    <span style="color: #fff; font-size: 14px;">Cole o link na busca ou nos seus contatos</span>
+                </div>
+            </div>
+
+            <button onclick="copiarLink()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px 20px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,0.3); margin-bottom: 12px;">
+                📋 COPIAR LINK
             </button>
-            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">Ou toque nos 3 pontinhos <span style="font-size: 16px;">•••</span> > "Abrir no navegador"</p>
+
+            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin: 0 0 20px;">Link copiado automaticamente ✓</p>
+
+            <div style="background: #fff; border-radius: 16px; padding: 16px; display: inline-block; margin-bottom: 8px;">
+                <img id="qrcode-img" src="" alt="QR Code" style="width: 160px; height: 160px; display: block;">
+            </div>
+            <p style="color: rgba(255,255,255,0.3); font-size: 11px; margin: 0 0 20px;">Escaneie com outro celular para entrar</p>
+
+            <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 14px;">
+                <p style="color: rgba(255,255,255,0.35); font-size: 12px; margin: 0; line-height: 1.5;">
+                    <strong style="color: rgba(255,255,255,0.5);">Método alternativo:</strong><br>
+                    Toque nos 3 pontinhos <span style="font-size: 18px;">•••</span> no topo da tela<br>
+                    → <strong style="color: #25D366;">"Abrir no navegador"</strong>
+                </p>
+            </div>
         </div>
     </div>
     <div class="container">
@@ -329,44 +365,29 @@
         const ua = (navigator.userAgent || '').toLowerCase();
         const isInAppBrowser = ua.indexOf('tiktok') > -1 || ua.indexOf('musical') > -1 || /; ?wv[);]/i.test(ua);
 
-        function escaparTikTok() {
+        function copiarLink() {
             navigator.clipboard.writeText(linkWhatsApp);
-
-            if (navigator.share) {
-                navigator.share({ url: linkWhatsApp, text: 'Entre no grupo de cupons!' });
-                return;
-            }
-
-            var androidApp = 'android-app://com.whatsapp/https/chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj';
-            var u = new URL(linkWhatsApp);
-            var intentUrl = 'intent://' + u.host + u.pathname + u.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(linkWhatsApp) + ';end';
-
-            function tentar(url) {
-                var a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-
-            tentar(androidApp);
-            setTimeout(function() { tentar(intentUrl); }, 100);
-            setTimeout(function() { window.location.href = androidApp; }, 200);
-            setTimeout(function() { window.location.href = intentUrl; }, 300);
-            setTimeout(function() { window.location.href = linkWhatsApp; }, 400);
+            var btn = document.querySelector('#interstitial button');
+            btn.textContent = '✅ COPIADO!';
+            btn.style.background = 'linear-gradient(135deg, #11998e, #38ef7d)';
+            setTimeout(function() {
+                btn.textContent = '📋 COPIAR LINK';
+                btn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
+            }, 2000);
+            window.location.href = 'whatsapp://send?text=Quero%20entrar%20no%20grupo';
         }
 
         if (isInAppBrowser) {
             document.getElementById('interstitial').style.display = 'flex';
+            navigator.clipboard.writeText(linkWhatsApp);
+            document.getElementById('qrcode-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=' + encodeURIComponent(linkWhatsApp);
         }
 
         function abrirGrupo() {
             fbq('track', 'Lead');
 
             if (isInAppBrowser) {
-                escaparTikTok();
+                document.getElementById('interstitial').style.display = 'flex';
                 return;
             }
 
