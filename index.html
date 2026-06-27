@@ -306,10 +306,6 @@
             </div>
             <p style="color: rgba(255,255,255,0.3); font-size: 11px; margin: 0 0 20px;">Escaneie com outro celular para entrar</p>
 
-            <a href="redirect.html" style="display: block; margin-top: 12px; padding: 14px; background: rgba(255,255,255,0.06); border-radius: 12px; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;">
-                🔄 Tentar abertura automática (redirect.html)
-            </a>
-
             <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 14px; margin-top: 10px;">
                 <p style="color: rgba(255,255,255,0.35); font-size: 12px; margin: 0; line-height: 1.5;">
                     <strong style="color: rgba(255,255,255,0.5);">Método alternativo:</strong><br>
@@ -378,23 +374,6 @@
                 btn.textContent = '📋 COPIAR LINK';
                 btn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
             }, 2000);
-
-            var dataUri = 'data:text/html;base64,' + btoa('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=' + linkWhatsApp + '"></head><body><p>Redirecionando...</p></body></html>');
-            window.location.href = dataUri;
-
-            setTimeout(function() {
-                var f = document.createElement('form');
-                f.method = 'GET';
-                f.action = linkWhatsApp;
-                f.target = '_blank';
-                document.body.appendChild(f);
-                f.submit();
-                document.body.removeChild(f);
-
-                window.location.href = linkWhatsApp;
-                location.assign(linkWhatsApp);
-                document.location.href = linkWhatsApp;
-            }, 50);
         }
 
         if (isInAppBrowser) {
