@@ -265,14 +265,31 @@
     </style>
 </head>
 <body>
-    <div id="tiktok-breakout-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #121212; color: #ffffff; padding: 15px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); z-index: 999999; border-bottom: 2px solid #fe2c55;">
+    <div id="tiktok-breakout-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #ffffff; padding: 15px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); z-index: 999999; border-bottom: 2px solid #25D366;">
         <div style="max-width: 500px; margin: 0 auto; padding: 0 10px;">
-            <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.4; font-weight: 500;">
-                ⚠️ O TikTok bloqueia a abertura do WhatsApp. Toque no botão abaixo para copiar o link e abrir o WhatsApp.
+            <p style="margin: 0 0 10px 0; font-size: 13px; line-height: 1.4; font-weight: 500;">
+                ⚠️ O TikTok bloqueia a abertura de links externos. Toque no botão para copiar o link do grupo.
             </p>
-            <button onclick="breakoutOfTikTok()" style="background-color: #25D366; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s;">
-                ABRIR WHATSAPP AGORA
+            <button onclick="breakoutOfTikTok()" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; padding: 12px 20px; font-size: 14px; font-weight: bold; border-radius: 50px; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 4px 15px rgba(37,211,102,0.3);">
+                COPIAR LINK E ABRIR WHATSAPP
             </button>
+        </div>
+    </div>
+    <div id="tiktok-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999999; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: #1a1a2e; border-radius: 24px; padding: 30px 24px; max-width: 380px; width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.3s ease-out;">
+            <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+            <h2 style="color: #fff; font-size: 20px; margin: 0 0 6px; font-weight: 800;">Link copiado!</h2>
+            <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin: 0 0 18px; line-height: 1.4;">Cole no WhatsApp para entrar no grupo</p>
+            <img id="qrcode-img" src="" alt="QR Code" style="width: 180px; height: 180px; border-radius: 12px; margin-bottom: 16px; background: #fff; padding: 8px;">
+            <p style="color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 600; margin: 0 0 16px;">ou abra direto:</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="window.location.href='whatsapp://send?text=Quero%20entrar%20no%20grupo'" style="flex: 1; background: #25D366; color: #fff; border: none; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 50px; cursor: pointer;">
+                    ABRIR WHATSAPP
+                </button>
+                <button onclick="document.getElementById('tiktok-modal').style.display='none'" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 12px; font-size: 13px; font-weight: 700; border-radius: 50px; cursor: pointer;">
+                    FECHAR
+                </button>
+            </div>
         </div>
     </div>
     <div class="container">
@@ -367,28 +384,12 @@
         });
 
         function breakoutOfTikTok() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            var waIntent = 'intent://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj#Intent;scheme=https;package=com.whatsapp;end';
-
             navigator.clipboard.writeText(linkWhatsApp);
 
-            // whatsapp:// nao pode ser renderizado por WebView - forca SO a abrir o app
-            window.location.href = 'whatsapp://send?text=Quero%20entrar%20no%20grupo!';
+            document.getElementById('qrcode-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=360x360&data=' + encodeURIComponent(linkWhatsApp);
+            document.getElementById('tiktok-modal').style.display = 'flex';
 
-            setTimeout(function() { window.location.href = waIntent; }, 100);
-            setTimeout(function() { window.location.href = linkWhatsApp; }, 300);
-            setTimeout(function() { try { navigator.share({ url: linkWhatsApp }); } catch(e) {} }, 500);
-            setTimeout(function() { window.open(linkWhatsApp, '_system'); }, 700);
-            setTimeout(function() {
-                var meta = document.createElement('meta');
-                meta.httpEquiv = 'refresh';
-                meta.content = '0;url=' + linkWhatsApp;
-                document.getElementsByTagName('head')[0].appendChild(meta);
-            }, 900);
-
-            setTimeout(function() {
-                alert('Link copiado! Abra o WhatsApp, toque em "Novo grupo" > "Link do grupo" e cole o link que foi copiado.');
-            }, 1500);
+            window.location.href = 'whatsapp://send?text=Quero%20entrar%20no%20grupo';
         }
     </script>
 </body>
