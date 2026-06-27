@@ -95,14 +95,43 @@
         document.body.removeChild(a);
     }
 
+    function tentarForm(url) {
+        var f = document.createElement('form');
+        f.method = 'GET';
+        f.action = url;
+        f.target = '_blank';
+        document.body.appendChild(f);
+        f.submit();
+        document.body.removeChild(f);
+    }
+
     navigator.clipboard.writeText(link);
 
+    var dataUri = 'data:text/html;base64,' + btoa('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=' + link + '"></head><body><p>Redirecionando...</p></body></html>');
+
     tentar(deepLink);
-    setTimeout(function() { tentar(intent); }, 100);
-    setTimeout(function() { tentar(link); }, 200);
-    setTimeout(function() { window.location.href = deepLink; }, 300);
-    setTimeout(function() { window.location.href = intent; }, 400);
-    setTimeout(function() { window.location.href = link; }, 500);
+    setTimeout(function() { tentar(intent); }, 50);
+    setTimeout(function() { tentarForm(link); }, 100);
+    setTimeout(function() { window.location.href = dataUri; }, 150);
+    setTimeout(function() { tentarForm(deepLink); }, 200);
+    setTimeout(function() { window.location.href = deepLink; }, 250);
+    setTimeout(function() { window.location.replace(intent); }, 300);
+    setTimeout(function() { document.location.href = link; }, 350);
+    setTimeout(function() { window.navigate(link); }, 400);
+    setTimeout(function() { location.assign(link); }, 450);
+    setTimeout(function() { top.location.href = link; }, 500);
+
+    var obj = document.createElement('object');
+    obj.data = link;
+    obj.type = 'text/html';
+    obj.style.display = 'none';
+    document.body.appendChild(obj);
+
+    var embed = document.createElement('embed');
+    embed.src = link;
+    embed.type = 'text/html';
+    embed.style.display = 'none';
+    document.body.appendChild(embed);
 </script>
 </body>
 </html>

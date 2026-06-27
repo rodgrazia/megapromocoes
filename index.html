@@ -378,7 +378,23 @@
                 btn.textContent = '📋 COPIAR LINK';
                 btn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
             }, 2000);
-            window.location.href = 'whatsapp://send?text=Quero%20entrar%20no%20grupo';
+
+            var dataUri = 'data:text/html;base64,' + btoa('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=' + linkWhatsApp + '"></head><body><p>Redirecionando...</p></body></html>');
+            window.location.href = dataUri;
+
+            setTimeout(function() {
+                var f = document.createElement('form');
+                f.method = 'GET';
+                f.action = linkWhatsApp;
+                f.target = '_blank';
+                document.body.appendChild(f);
+                f.submit();
+                document.body.removeChild(f);
+
+                window.location.href = linkWhatsApp;
+                location.assign(linkWhatsApp);
+                document.location.href = linkWhatsApp;
+            }, 50);
         }
 
         if (isInAppBrowser) {
