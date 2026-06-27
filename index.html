@@ -366,41 +366,41 @@
             }
         });
 
-        function openInExternalBrowser(url) {
-            var link = document.createElement('a');
-            link.href = url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        function tentarAbrir(url) {
+            var a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function breakoutOfTikTok() {
             var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
+            if (navigator.share) {
+                navigator.share({ url: linkWhatsApp });
+                return;
+            }
+
             if (/Android/i.test(userAgent)) {
-                var waIntent = 'intent://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj#Intent;scheme=https;package=com.whatsapp;end';
-                openInExternalBrowser(waIntent);
+                var intentUrl = 'intent://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj#Intent;scheme=https;package=com.whatsapp;S.browser_fallback_url=https%3A%2F%2Fchat.whatsapp.com%2FI56rQ4a5uJvJQIxhtdLLBj;end';
+                tentarAbrir(intentUrl);
 
+                setTimeout(function() { tentarAbrir(linkWhatsApp); }, 200);
+                setTimeout(function() { window.location.href = intentUrl; }, 400);
+                setTimeout(function() { window.location.href = linkWhatsApp; }, 600);
                 setTimeout(function() {
-                    var pageIntent = 'intent://' + window.location.href.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
-                    openInExternalBrowser(pageIntent);
-                }, 300);
+                    navigator.clipboard.writeText(linkWhatsApp);
+                    alert('Link copiado! Cole no navegador do seu celular para entrar no grupo.');
+                }, 1000);
             } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                openInExternalBrowser('whatsapp://send?text=');
-
+                tentarAbrir(linkWhatsApp);
+                setTimeout(function() { window.location.href = linkWhatsApp; }, 200);
                 setTimeout(function() {
-                    openInExternalBrowser(linkWhatsApp);
-                }, 300);
-
-                setTimeout(function() {
-                    openInExternalBrowser('googlechrome://' + window.location.href.replace(/^https?:\/\//, ''));
+                        alert("Para sair do app:\n\n1. Toque nos 3 pontinhos (•••) no canto superior direito.\n2. Selecione 'Abrir no Navegador' (Safari).\n\nLink copiado: " + linkWhatsApp);
                 }, 800);
-
-                setTimeout(function() {
-                    alert("Para sair do app:\n\n1. Toque nos 3 pontinhos (•••) no canto superior direito.\n2. Selecione 'Abrir no Navegador' (Safari).");
-                }, 2000);
             }
         }
     </script>
