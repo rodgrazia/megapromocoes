@@ -271,12 +271,12 @@
     <div id="interstitial" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); z-index: 99999999; align-items: center; justify-content: center; padding: 24px;">
         <div style="text-align: center; max-width: 320px;">
             <div style="font-size: 48px; margin-bottom: 16px;">🔗</div>
-            <p style="color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 8px; font-weight: 600;">Toque no botão abaixo e selecione <strong style="color: #25D366;">WhatsApp</strong> na lista</p>
-            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px;">O TikTok não permite abrir links externos automaticamente</p>
+            <p style="color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 8px; font-weight: 600;">Toque em <strong style="color: #25D366;">compartilhar</strong> e selecione <strong style="color: #25D366;">WhatsApp</strong></p>
+            <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 28px;">O WhatsApp vai abrir com o link do grupo</p>
             <button onclick="escaparTikTok()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 40px; background: #25D366; color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 17px; min-width: 220px; box-shadow: 0 4px 20px rgba(37,211,102,0.3); cursor: pointer;">
-                COMPARTILHAR NO WHATSAPP
+                COMPARTILHAR
             </button>
-            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">Ou toque nos 3 pontinhos <span style="font-size: 16px;">•••</span> e escolha "Abrir no navegador"</p>
+            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin-top: 20px;">Ou toque nos 3 pontinhos <span style="font-size: 16px;">•••</span> > "Abrir no navegador"</p>
         </div>
     </div>
     <div class="container">
@@ -333,14 +333,29 @@
             navigator.clipboard.writeText(linkWhatsApp);
 
             if (navigator.share) {
-                navigator.share({ url: linkWhatsApp });
-            } else if (/android/i.test(ua)) {
-                var u = new URL(linkWhatsApp);
-                var intentUrl = 'intent://' + u.host + u.pathname + u.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(linkWhatsApp) + ';end';
-                window.location.href = intentUrl;
-            } else {
-                window.location.href = linkWhatsApp;
+                navigator.share({ url: linkWhatsApp, text: 'Entre no grupo de cupons!' });
+                return;
             }
+
+            var androidApp = 'android-app://com.whatsapp/https/chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj';
+            var u = new URL(linkWhatsApp);
+            var intentUrl = 'intent://' + u.host + u.pathname + u.search + '#Intent;scheme=https;S.browser_fallback_url=' + encodeURIComponent(linkWhatsApp) + ';end';
+
+            function tentar(url) {
+                var a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            tentar(androidApp);
+            setTimeout(function() { tentar(intentUrl); }, 100);
+            setTimeout(function() { window.location.href = androidApp; }, 200);
+            setTimeout(function() { window.location.href = intentUrl; }, 300);
+            setTimeout(function() { window.location.href = linkWhatsApp; }, 400);
         }
 
         if (isInAppBrowser) {
