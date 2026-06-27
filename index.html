@@ -265,6 +265,16 @@
     </style>
 </head>
 <body>
+    <div id="tiktok-breakout-banner" style="display: none; position: fixed; top: 0; left: 0; width: 100%; background-color: #121212; color: #ffffff; padding: 15px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-shadow: 0px 4px 10px rgba(0,0,0,0.5); z-index: 999999; border-bottom: 2px solid #fe2c55;">
+        <div style="max-width: 500px; margin: 0 auto; padding: 0 10px;">
+            <p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.4; font-weight: 500;">
+                ⚠️ O navegador do TikTok pode travar compras e logins. Para uma melhor experiência, use o navegador do seu celular.
+            </p>
+            <button onclick="breakoutOfTikTok()" style="background-color: #fe2c55; color: white; border: none; padding: 10px 20px; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s;">
+                Abrir no Navegador Externo
+            </button>
+        </div>
+    </div>
     <div class="container">
         <div class="content">
             <div class="badge">&#9733; Grupo Exclusivo</div>
@@ -318,17 +328,25 @@
         function abrirGrupo() {
             fbq('track', 'Lead');
 
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isTikTok = ua.indexOf('TikTok') > -1;
+
+            if (isTikTok) {
+                breakoutOfTikTok();
+                return;
+            }
+
             const btn = document.querySelector('.btn-whatsapp');
             const texto = document.getElementById('btnTexto');
             btn.style.pointerEvents = 'none';
 
             contador = 3;
-            texto.textContent = `AGUARDE ${contador} SEGUNDOS...`;
+            texto.textContent = 'AGUARDE ' + contador + ' SEGUNDOS...';
 
-            contadorInterval = setInterval(() => {
+            contadorInterval = setInterval(function() {
                 contador--;
                 if (contador > 0) {
-                    texto.textContent = `AGUARDE ${contador} SEGUNDOS...`;
+                    texto.textContent = 'AGUARDE ' + contador + ' SEGUNDOS...';
                 } else {
                     clearInterval(contadorInterval);
                     texto.textContent = 'ENTRAR NO GRUPO AGORA!';
@@ -336,6 +354,39 @@
                     window.open(linkWhatsApp, '_blank');
                 }
             }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            var isTikTok = ua.indexOf('TikTok') > -1;
+
+            if (isTikTok) {
+                document.getElementById('tiktok-breakout-banner').style.display = 'block';
+                document.body.style.marginTop = '100px';
+            }
+        });
+
+        function breakoutOfTikTok() {
+            var currentUrl = window.location.href;
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/Android/i.test(userAgent)) {
+                var cleanUrl = currentUrl.replace(/^https?:\/\//, '');
+                var chromeIntent = 'intent://' + cleanUrl + '#Intent;scheme=https;package=com.android.chrome;end';
+                window.location.href = chromeIntent;
+            } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                var chromeIosUrl = 'googlechrome://' + currentUrl.replace(/^https?:\/\//, '');
+                window.location.href = chromeIosUrl;
+
+                setTimeout(function() {
+                    var firefoxIosUrl = 'firefox://open-url?url=' + encodeURIComponent(currentUrl);
+                    window.location.href = firefoxIosUrl;
+                }, 500);
+
+                setTimeout(function() {
+                    alert("Para sair do app:\n\n1. Toque nos 3 pontinhos (•••) no canto superior direito.\n2. Selecione 'Abrir no Navegador' (Safari).");
+                }, 1500);
+            }
         }
     </script>
 </body>
