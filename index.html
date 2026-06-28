@@ -261,6 +261,100 @@
             font-weight: 700;
         }
         .avatars span:first-child { margin-left: 0; }
+        .selo {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(37,211,102,0.12);
+            border: 1px solid rgba(37,211,102,0.25);
+            padding: 6px 14px;
+            border-radius: 50px;
+            color: #25D366;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            letter-spacing: 0.3px;
+        }
+        .faq {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .faq-item:hover { background: rgba(255,255,255,0.07); }
+        .faq-pergunta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.82rem;
+            font-weight: 600;
+            gap: 12px;
+        }
+        .faq-pergunta span { font-size: 1.1rem; transition: transform 0.2s; }
+        .faq-item.aberto .faq-pergunta span { transform: rotate(45deg); }
+        .faq-resposta {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.78rem;
+            line-height: 1.5;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+        .faq-item.aberto .faq-resposta {
+            margin-top: 10px;
+            max-height: 200px;
+        }
+        .notif-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .notif-toast {
+            background: rgba(15,12,41,0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(37,211,102,0.15);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: notifIn 0.4s ease-out;
+            pointer-events: auto;
+            max-width: 340px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+        }
+        @keyframes notifIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notif-avatar {
+            width: 32px; height: 32px; min-width: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 0.65rem; font-weight: 700;
+        }
+        .notif-texto {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.75rem;
+            line-height: 1.3;
+        }
+        .notif-texto strong { color: #25D366; }
         @media (max-width: 480px) {
             .container { padding: 30px 20px; }
             h1 { font-size: 1.5rem; }
@@ -295,22 +389,15 @@
                 </div>
             </div>
 
-            <button onclick="copiarLink()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px 20px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,0.3); margin-bottom: 12px;">
+            <button onclick="copiarLink()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px 20px; background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; border: none; border-radius: 60px; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 20px rgba(37,211,102,0.3); margin-bottom: 8px;">
                 📋 COPIAR LINK
             </button>
-
             <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin: 0 0 20px;">Link copiado automaticamente ✓</p>
 
-            <div style="background: #fff; border-radius: 16px; padding: 16px; display: inline-block; margin-bottom: 8px;">
-                <img id="qrcode-img" src="" alt="QR Code" style="width: 160px; height: 160px; display: block;">
-            </div>
-            <p style="color: rgba(255,255,255,0.3); font-size: 11px; margin: 0 0 20px;">Escaneie com outro celular para entrar</p>
-
-            <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 14px; margin-top: 10px;">
+            <div style="background: rgba(255,255,255,0.04); border-radius: 12px; padding: 14px;">
                 <p style="color: rgba(255,255,255,0.35); font-size: 12px; margin: 0; line-height: 1.5;">
-                    <strong style="color: rgba(255,255,255,0.5);">Método alternativo:</strong><br>
-                    Toque nos 3 pontinhos <span style="font-size: 18px;">•••</span> no topo da tela<br>
-                    → <strong style="color: #25D366;">"Abrir no navegador"</strong>
+                    <strong style="color: rgba(255,255,255,0.5);">Alternativa:</strong><br>
+                    Toque nos 3 pontinhos <span style="font-size: 18px;">•••</span> → <strong style="color: #25D366;">"Abrir no navegador"</strong>
                 </p>
             </div>
         </div>
@@ -321,6 +408,7 @@
             <div class="icon-wrapper"><img src="logo2.png" alt="Logo"></div>
             <h1>Grupo de <span>Cupons</span></h1>
             <p class="headline">Cupons da Amazon, Shopee e Mercado Livre!</p>
+            <div class="selo">✅ AMBIENTE 100% SEGURO E GRATUITO</div>
             <div class="social-proof">
                 <div class="avatars">
                     <span>M</span>
@@ -351,6 +439,20 @@
                     Atualizações instantâneas
                 </div>
             </div>
+            <div class="faq">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-pergunta">Isso é golpe? <span>+</span></div>
+                    <div class="faq-resposta">Não! O grupo é 100% gratuito e só compartilha cupons oficiais das lojas. Você pode sair quando quiser.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-pergunta">Preciso pagar algo? <span>+</span></div>
+                    <div class="faq-resposta">Zero reais. Todos os cupons são públicos e gratuitos, a gente só reúne eles em um lugar só pra você.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-pergunta">Como funcionam os cupons? <span>+</span></div>
+                    <div class="faq-resposta">A gente posta códigos de desconto no grupo. É só copiar e aplicar na hora da compra na Amazon, Shopee e outras lojas.</div>
+                </div>
+            </div>
             <button class="btn-whatsapp" onclick="abrirGrupo()">
                 <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 <span id="btnTexto">ENTRAR NO GRUPO AGORA!</span>
@@ -358,12 +460,19 @@
             <p class="footer-text">Seu acesso é seguro e gratuito</p>
         </div>
     </div>
+
+    <div class="notif-container" id="notifContainer"></div>
+
     <script>
         document.getElementById('vagasNumero').textContent = Math.floor(Math.random() * 10) + 1;
 
         const linkWhatsApp = 'https://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj';
         const ua = (navigator.userAgent || '').toLowerCase();
         const isInAppBrowser = ua.indexOf('tiktok') > -1 || ua.indexOf('musical') > -1 || /; ?wv[);]/i.test(ua);
+
+        function toggleFaq(el) {
+            el.classList.toggle('aberto');
+        }
 
         function copiarLink() {
             navigator.clipboard.writeText(linkWhatsApp);
@@ -379,7 +488,6 @@
         if (isInAppBrowser) {
             document.getElementById('interstitial').style.display = 'flex';
             navigator.clipboard.writeText(linkWhatsApp);
-            document.getElementById('qrcode-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=' + encodeURIComponent(linkWhatsApp);
         }
 
         function abrirGrupo() {
@@ -410,6 +518,39 @@
                     window.open(linkWhatsApp, '_blank');
                 }
             }, 1000);
+        }
+
+        var notifs = [
+            { nome: 'Ana', loja: 'Amazon', desc: '20%' },
+            { nome: 'Maria', loja: 'Shopee', desc: '30%' },
+            { nome: 'Julia', loja: 'Mercado Livre', desc: '25%' },
+            { nome: 'Carlos', loja: 'Amazon', desc: '35%' },
+            { nome: 'Lucas', loja: 'Shopee', desc: '40%' },
+            { nome: 'Fernanda', loja: 'Amazon', desc: '25%' },
+            { nome: 'Rafael', loja: 'Mercado Livre', desc: '30%' },
+            { nome: 'Paula', loja: 'Shopee', desc: '20%' },
+        ];
+        var notifIdx = 0;
+
+        function mostrarNotificacao() {
+            var container = document.getElementById('notifContainer');
+            var n = notifs[notifIdx % notifs.length];
+            notifIdx++;
+            var iniciais = n.nome.charAt(0) + 'R';
+            var toast = document.createElement('div');
+            toast.className = 'notif-toast';
+            toast.innerHTML = '<div class="notif-avatar">' + iniciais + '</div><div class="notif-texto"><strong>' + n.nome + '</strong> acabou de conseguir <strong>' + n.desc + ' OFF</strong> na ' + n.loja + ' ✨</div>';
+            container.appendChild(toast);
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s';
+                setTimeout(function() { toast.remove(); }, 500);
+            }, 5000);
+        }
+
+        if (!isInAppBrowser) {
+            mostrarNotificacao();
+            setInterval(mostrarNotificacao, 8000);
         }
     </script>
 </body>
