@@ -473,7 +473,7 @@
 
         const linkWhatsApp = 'https://chat.whatsapp.com/I56rQ4a5uJvJQIxhtdLLBj';
         const ua = (navigator.userAgent || '').toLowerCase();
-        const isInAppBrowser = ua.indexOf('tiktok') > -1 || ua.indexOf('musical') > -1 || /; ?wv[);]/i.test(ua);
+        const isInAppBrowser = ua.indexOf('tiktok') > -1 || ua.indexOf('musical') > -1 || ua.indexOf('wv') > -1 || ua.indexOf('tb-webview') > -1 || /; ?wv[);]/i.test(ua);
 
         function toggleFaq(el) {
             el.classList.toggle('aberto');
