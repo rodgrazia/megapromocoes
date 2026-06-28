@@ -481,7 +481,13 @@
 
         function tocarLink() {
             navigator.clipboard.writeText(linkWhatsApp);
-            window.location.href = linkWhatsApp;
+            var btn = document.querySelector('#interstitial button');
+            btn.textContent = '✅ COPIADO!';
+            btn.style.background = 'linear-gradient(135deg, #11998e, #38ef7d)';
+            setTimeout(function() {
+                btn.textContent = '📋 COPIAR LINK';
+                btn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
+            }, 2000);
         }
 
         function copiarLink() {
